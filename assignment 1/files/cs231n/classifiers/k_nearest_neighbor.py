@@ -113,8 +113,10 @@ class KNearestNeighbor(object):
 
     Input / Output: Same as compute_distances_two_loops
     """
-    num_test = X.shape[0]
-    num_train = self.X_train.shape[0]
+    num_test = X.shape[0] # 500
+    num_train = self.X_train.shape[0] # 5000
+    test_set = X # 500x3072
+    train_set = self.X_train # 5000x3072
     dists = np.zeros((num_test, num_train))
     #########################################################################
     # TODO:                                                                 #
@@ -128,7 +130,17 @@ class KNearestNeighbor(object):
     # HINT: Try to formulate the l2 distance using matrix multiplication    #
     #       and two broadcast sums.                                         #
     #########################################################################
-    pass
+    # sqrt((x-y)^2)
+    # (x-y)^2 = x^2 + y^2 -2xy
+    x_sq = np.square(test_set).sum(axis=1) # x^2
+    y_sq = np.square(train_set).sum(axis=1) # y^2
+    xy_ = np.dot(test_set, train_set.transpose()) # xy
+    formatted_x_sq = np.matrix(x_sq).reshape(-1, 1) # formatted x^2 so it can be added to -2xy
+    dists = np.sqrt(-2*xy_ + formatted_x_sq + y_sq) # -2xy + x^2 + y^2
+
+    #print x_sq.shape
+    #print formatted_x_sq.shape
+
     #########################################################################
     #                         END OF YOUR CODE                              #
     #########################################################################
