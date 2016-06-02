@@ -73,7 +73,7 @@ class KNearestNeighbor(object):
         # training point, and store the result in dists[i, j]. You should   #
         # not use a loop over dimension.                                    #
         #####################################################################
-        dists[i, j] = abs((test_set[i]-train_set[j]).sum())
+        dists[i, j] = np.sqrt(np.square(test_set[i]-train_set[j]).sum())
         #####################################################################
         #                       END OF YOUR CODE                            #
         #####################################################################
@@ -144,6 +144,7 @@ class KNearestNeighbor(object):
     """
     num_test = dists.shape[0]
     y_pred = np.zeros(num_test)
+
     for i in xrange(num_test):
       # A list of length k storing the labels of the k nearest neighbors to
       # the ith test point.
@@ -155,7 +156,11 @@ class KNearestNeighbor(object):
       # neighbors. Store these labels in closest_y.                           #
       # Hint: Look up the function numpy.argsort.                             #
       #########################################################################
-      pass
+      # Lower distance = better
+      k_indexes = np.argsort(dists[i, :])[:k]
+      for index in k_indexes:
+          closest_y.append(self.y_train[index])
+
       #########################################################################
       # TODO:                                                                 #
       # Now that you have found the labels of the k nearest neighbors, you    #
@@ -163,7 +168,9 @@ class KNearestNeighbor(object):
       # Store this label in y_pred[i]. Break ties by choosing the smaller     #
       # label.                                                                #
       #########################################################################
-      pass
+      count = np.bincount(np.array(closest_y))
+      most_common_label = np.argmax(count)
+      y_pred[i] = most_common_label
       #########################################################################
       #                           END OF YOUR CODE                            #
       #########################################################################
