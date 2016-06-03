@@ -90,8 +90,7 @@ class KNearestNeighbor(object):
     num_train = self.X_train.shape[0]
     dists = np.zeros((num_test, num_train))
     test_set = X
-    train_set = self.X_train
-    print dists.shape
+    train_set = self.X_train    
     for i in xrange(num_test):
       #######################################################################
       # TODO:                                                               #
