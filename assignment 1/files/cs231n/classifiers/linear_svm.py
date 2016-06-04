@@ -82,7 +82,7 @@ def svm_loss_vectorized(W, X, y, reg):
   y_mat[np.arange(0, scores.shape[0]), y] = 1
   correct_scores = np.multiply(scores, y_mat)
 
-  # Sum over each column
+  # Sum over each row
   sums = correct_scores.sum(axis=1)
   sums = sums.reshape(scores.shape[0], 1)
   margins = (scores - sums) + 1
@@ -115,7 +115,20 @@ def svm_loss_vectorized(W, X, y, reg):
   # to reuse some of the intermediate values that you used to compute the     #
   # loss.                                                                     #
   #############################################################################
-  pass
+  margins[margins > 0] = 1
+  margins[margins < 0] = 0
+  margins[np.arange(scores.shape[0]), y] = 0
+
+  # Negative sum when y==j
+  sums = np.sum(margins, axis=1)
+  margins[np.arange(scores.shape[0]), y] = -1.0 * sums
+
+  # Sum everything via the dot notation
+  # Since margins takes into account for negative values
+  # when y==j, X.T.dot(margins) does the trick
+  dW = X.T.dot(margins)
+  dW /= float(X.shape[0])
+  dW += reg * W
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
