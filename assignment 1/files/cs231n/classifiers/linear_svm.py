@@ -75,7 +75,7 @@ def svm_loss_vectorized(W, X, y, reg):
   # Implement a vectorized version of the structured SVM loss, storing the    #
   # result in loss.                                                           #
   #############################################################################
-  scores = X.dot(W) # f(x_i, W)
+  scores = np.dot(X, W) # f(x_i, W)
 
   # Correct scores
   y_mat = np.zeros(scores.shape)
@@ -107,7 +107,7 @@ def svm_loss_vectorized(W, X, y, reg):
 
 
   #############################################################################
-  # TODO:                                                                     #
+  #TODO:                                                                      #
   # Implement a vectorized version of the gradient for the structured SVM     #
   # loss, storing the result in dW.                                           #
   #                                                                           #
